@@ -1,0 +1,74 @@
+/* Instead of covering the page with an overlay (which breaks Facebook's visibility checks),
+   we make Facebook's own elements black and transparent. */
+
+html, body {
+    background-color: #000 !important;
+}
+
+body *:not(#fb-cli-overlay):not(#fb-cli-overlay *) {
+    background-color: #000 !important;
+    color: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    background-image: none !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+}
+
+body *:not(#fb-cli-overlay):not(#fb-cli-overlay *)::before,
+body *:not(#fb-cli-overlay):not(#fb-cli-overlay *)::after {
+    background-color: #000 !important;
+    background-image: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    opacity: 0 !important;
+}
+
+img, video, svg, iframe, canvas {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+/* Our CLI Overlay */
+#fb-cli-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: transparent; /* No longer solid black! */
+    color: #fff; /* White text */
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 14px;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 99999999 !important;
+    overflow-y: auto;
+    word-wrap: break-word;
+    display: block !important;
+    visibility: visible !important;
+    pointer-events: none !important; /* Let scroll events hit Facebook */
+}
+
+.fb-cli-post {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #fff;
+    pointer-events: auto !important; /* Let user copy text */
+}
+
+.fb-cli-header {
+    color: #aaa;
+    margin-bottom: 10px;
+}
+
+.fb-cli-header span.prompt {
+    color: #fff;
+    font-weight: bold;
+}
+
+.fb-cli-text {
+    white-space: pre-wrap;
+    line-height: 1.5;
+}
