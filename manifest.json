@@ -3,6 +3,9 @@
   "name": "FB CLI",
   "version": "1.0",
   "description": "Turns Facebook into a discreet CLI.",
+  "icons": {
+    "128": "icon.png"
+  },
   "content_scripts": [
     {
       "matches": ["*://*.facebook.com/*"],

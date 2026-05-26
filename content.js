@@ -74,12 +74,14 @@ function extractPostData(postElement) {
         }
     }
 
-    // Fallback if isolated text wasn't found
-    if (!postBody || postBody.length < 20) {
-        let rawText = postElement.textContent.replace(/Like|Comment|Share|Send|Thích|Bình luận|Chia sẻ|Gửi|Xem thêm|See more/gi, '').replace(/\n\s*\n/g, '\n\n').trim();
-        if (rawText && rawText.length > 0) {
-            postBody = rawText;
-        }
+    // Skip Reels, Stories, or other non-user feed blocks
+    if (author.toLowerCase() === 'reels' || author.toLowerCase() === 'stories') {
+        return null;
+    }
+    
+    // Skip if the body is just an ARIA label spam (like "FacebookFacebookFacebook")
+    if (postBody.replace(/Facebook|Reels/gi, '').trim().length < 10) {
+        return null;
     }
 
     // Clean up trailing 'Xem thêm' or 'See more' that might have snuck in (including unicode ellipsis '…')
