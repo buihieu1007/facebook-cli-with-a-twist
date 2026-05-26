@@ -1,33 +1,22 @@
 /* Instead of covering the page with an overlay (which breaks Facebook's visibility checks),
-   we make Facebook's own elements black and transparent. */
+   we make Facebook's own elements nearly invisible to the eye but still geometrically present. */
 
-html, body {
+html {
     background-color: #000 !important;
 }
 
+body {
+    /* 1% opacity is functionally invisible against a black background, 
+       but Facebook's IntersectionObserver still considers it "rendered" so infinite scroll works! */
+    opacity: 0.01 !important;
+    pointer-events: none !important; /* Block all clicks from reaching Facebook */
+    background: #000 !important;
+}
+
+/* Nuke mask images explicitly to kill the grey hover squares */
 body *:not(#fb-cli-overlay):not(#fb-cli-overlay *) {
-    background-color: #000 !important;
-    color: transparent !important;
-    border-color: transparent !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-    background-image: none !important;
-    -webkit-mask-image: none !important;
-    mask-image: none !important;
-}
-
-body *:not(#fb-cli-overlay):not(#fb-cli-overlay *)::before,
-body *:not(#fb-cli-overlay):not(#fb-cli-overlay *)::after {
-    background-color: #000 !important;
-    background-image: none !important;
-    border-color: transparent !important;
-    box-shadow: none !important;
-    opacity: 0 !important;
-}
-
-img, video, svg, iframe, canvas {
-    opacity: 0 !important;
-    visibility: hidden !important;
+    -webkit-mask: none !important;
+    mask: none !important;
 }
 
 /* Our CLI Overlay */
