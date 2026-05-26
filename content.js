@@ -98,9 +98,6 @@ function extractPostData(postElement) {
 function renderPost(postData) {
     if (!cliOverlay) return null;
     
-    // Check if the user is already at the bottom (within 50px)
-    const wasAtBottom = cliOverlay.scrollHeight - cliOverlay.scrollTop - cliOverlay.clientHeight < 50;
-
     const postDiv = document.createElement('div');
     postDiv.className = 'fb-cli-post';
     postDiv.innerHTML = `
@@ -109,10 +106,10 @@ function renderPost(postData) {
     `;
     cliOverlay.appendChild(postDiv);
     
-    // Only auto-scroll if the user was already at the bottom
-    if (wasAtBottom) {
-        cliOverlay.scrollTop = cliOverlay.scrollHeight;
-    }
+    // We intentionally do NOT auto-scroll here.
+    // Appending a child naturally extends the scrollHeight without moving the user's viewport.
+    // This allows the user to read at their own pace without being dragged down.
+    
     return postDiv;
 }
 
