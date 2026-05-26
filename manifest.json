@@ -4,7 +4,17 @@
   "version": "1.0",
   "description": "Turns Facebook into a discreet CLI.",
   "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
     "128": "icon.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    },
+    "default_title": "FB CLI"
   },
   "content_scripts": [
     {
