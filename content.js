@@ -67,12 +67,21 @@ function extractPostData(postElement) {
         let cleanText = text.replace(/^·\s*/, '').trim();
         
         if (cleanText && cleanText.length > 0 && cleanText.length < 50) {
-            // Check if any of the ignore words are INSIDE the text
-            let shouldIgnore = ignoreAuthors.some(ignore => lower.includes(ignore));
+            // Ignore URLs, slashes, or domains that got mistaken as author links
+            let isUrl = cleanText.startsWith('http://') || 
+                        cleanText.startsWith('https://') || 
+                        cleanText.includes('www.') || 
+                        cleanText.includes('/') || 
+                        /\.(?:com|org|net|vn|edu|gov|io|info)\b/i.test(cleanText);
             
-            if (!shouldIgnore) {
-                if (!authorParts.includes(cleanText)) {
-                    authorParts.push(cleanText);
+            if (!isUrl) {
+                // Check if any of the ignore words are INSIDE the text
+                let shouldIgnore = ignoreAuthors.some(ignore => lower.includes(ignore));
+                
+                if (!shouldIgnore) {
+                    if (!authorParts.includes(cleanText)) {
+                        authorParts.push(cleanText);
+                    }
                 }
             }
         }
