@@ -43,13 +43,12 @@ body *:not(#fb-cli-overlay):not(#fb-cli-overlay *) {
 .fb-cli-post {
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 1px dashed #fff;
     pointer-events: auto !important; /* Let user copy text */
 }
 
 .fb-cli-header {
-    color: #aaa;
-    margin-bottom: 10px;
+    color: #00ff00;
+    margin-bottom: 5px;
 }
 
 .fb-cli-header span.prompt {
@@ -59,5 +58,35 @@ body *:not(#fb-cli-overlay):not(#fb-cli-overlay *) {
 
 .fb-cli-text {
     white-space: pre-wrap;
-    line-height: 1.5;
+    word-wrap: break-word;
+    color: #cccccc;
+}
+
+.fb-cli-load-comments {
+    color: #4CAF50;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.fb-cli-load-comments:hover {
+    color: #81C784;
+    text-decoration: underline;
+}
+
+.fb-cli-comments-container {
+    margin-top: 10px;
+}
+
+.fb-cli-comment {
+    margin-left: 20px;
+    margin-top: 5px;
+    border-left: 1px dashed #333;
+    padding-left: 10px;
+    color: #aaaaaa;
+}
+
+.fb-cli-comment-author {
+    color: #ffffff;
+    font-weight: bold;
 }
