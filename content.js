@@ -15,15 +15,20 @@ function cleanObfuscatedText(str) {
     return str.replace(/[\u200B-\u200D\uFEFF\u200E\u200F\u00AD]/g, "").replace(/\s+/g, " ").trim();
 }
 
-// Strip markdown styling leftovers like *** and ** from the text
+// Strip markdown styling leftovers like ***, **, ___ and __ from the text
 function stripMarkdownStyling(str) {
     if (!str) return "";
     return str
         .replace(/\*{2,3}([^*]+?)\*{2,3}/g, '$1')
+        .replace(/_{2,3}([^_]+?)_{2,3}/g, '$1')
         .replace(/\b\*([^*]+?)\*\b/g, '$1')
+        .replace(/\b_([^_]+?)\_\b/g, '$1')
         .replace(/\s+\*{2,}\s+/g, ' ')
         .replace(/^\*{2,}\s+/g, '')
-        .replace(/\s+\*{2,}$/g, '');
+        .replace(/\s+\*{2,}$/g, '')
+        .replace(/\s+_{2,}\s+/g, ' ')
+        .replace(/^_{2,}\s+/g, '')
+        .replace(/\s+_{2,}$/g, '');
 }
 
 // Process the print queue so posts appear one by one
