@@ -555,14 +555,18 @@ function checkUrlAndToggleCLI() {
     
     if (isMessagesPage) {
         if (overlay) overlay.style.display = 'none';
+        document.documentElement.classList.remove('fb-cli-active');
+        document.body.classList.remove('fb-cli-active');
         document.body.style.opacity = '1';
         document.body.style.pointerEvents = 'auto';
     } else {
         initOverlay(); // Enforce overlay existence
         const visibleOverlay = document.getElementById('fb-cli-overlay');
         if (visibleOverlay) visibleOverlay.style.display = 'block';
-        document.body.style.opacity = '0.01';
-        document.body.style.pointerEvents = 'none';
+        document.documentElement.classList.add('fb-cli-active');
+        document.body.classList.add('fb-cli-active');
+        document.body.style.opacity = '';
+        document.body.style.pointerEvents = '';
     }
 }
 
