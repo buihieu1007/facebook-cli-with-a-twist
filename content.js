@@ -109,8 +109,12 @@ function extractPostData(postElement) {
         }
     }
 
-    // Skip Reels, Stories, or other non-user feed blocks
-    if (author.toLowerCase() === 'reels' || author.toLowerCase() === 'stories') {
+    // Skip Reels, Stories, and Messenger chat boxes/placeholders
+    let lowerAuthor = author.toLowerCase();
+    let lowerBody = postBody.toLowerCase();
+    if (lowerAuthor === 'reels' || lowerAuthor === 'stories' || 
+        lowerAuthor.includes('nhập') || lowerAuthor.includes('tin nhắn do') ||
+        lowerBody.includes('nhập') || lowerBody.includes('tin nhắn do')) {
         return null;
     }
     
@@ -297,6 +301,7 @@ function linkify(text) {
 
 // Handle an individual post node
 function processPost(postNode) {
+    if (window.location.href.includes('/messages/')) return;
     // Intercept comments that Facebook renders as full articles (e.g. on permalink pages or inline)
     let nodeLabel = (postNode.getAttribute('aria-label') || '').toLowerCase();
     if (nodeLabel.includes('comment') || nodeLabel.includes('bình luận')) {
@@ -544,13 +549,32 @@ function triggerLoadComments(postNode, postDiv) {
     }, 200);
 }
 
-// Start listeners
+function checkUrlAndToggleCLI() {
+    const isMessagesPage = window.location.href.includes('/messages/');
+    const overlay = document.getElementById('fb-cli-overlay');
+    
+    if (isMessagesPage) {
+        if (overlay) overlay.style.display = 'none';
+        document.body.style.opacity = '1';
+        document.body.style.pointerEvents = 'auto';
+    } else {
+        initOverlay(); // Enforce overlay existence
+        const visibleOverlay = document.getElementById('fb-cli-overlay');
+        if (visibleOverlay) visibleOverlay.style.display = 'block';
+        document.body.style.opacity = '0.01';
+        document.body.style.pointerEvents = 'none';
+    }
+}
+
+// Start listeners and route watcher
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        initOverlay();
+        checkUrlAndToggleCLI();
         startObserver();
+        setInterval(checkUrlAndToggleCLI, 400);
     });
 } else {
-    initOverlay();
+    checkUrlAndToggleCLI();
     startObserver();
+    setInterval(checkUrlAndToggleCLI, 400);
 }
