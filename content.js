@@ -179,8 +179,39 @@ function extractPostData(postElement) {
         }
     }
 
+    // Extract reaction/like count
+    let likeCount = "0";
+    for (let el of allDescendants) {
+        let ariaLabel = el.getAttribute('aria-label');
+        if (ariaLabel) {
+            let cleanAria = cleanObfuscatedText(ariaLabel);
+            let match = cleanAria.match(/(\d+[\dKkMm,.]*)\s*(?:others|người khác|reactions?|cảm xúc|thích|likes?)/i);
+            if (match) {
+                likeCount = match[1];
+                break;
+            }
+        }
+    }
+    
+    if (likeCount === "0") {
+        const icons = postElement.querySelectorAll('[role="img"]');
+        for (let icon of icons) {
+            let parent = icon.parentElement;
+            for (let i = 0; i < 4 && parent; i++) {
+                let pText = cleanObfuscatedText(parent.textContent);
+                let match = pText.match(/^(\d+[\dKkMm,.]*)$/);
+                if (match) {
+                    likeCount = match[1];
+                    break;
+                }
+                parent = parent.parentElement;
+            }
+            if (likeCount !== "0") break;
+        }
+    }
+
     // Return pathString as 'author' so the rest of the CLI uses it natively
-    return { author: pathString, body: postBody, commentCount };
+    return { author: pathString, body: postBody, commentCount, likeCount };
 }
 
 // 3. Render a post
@@ -189,9 +220,16 @@ function renderPost(postData, postNode, uniqueId) {
     
     const postDiv = document.createElement('div');
     postDiv.className = 'fb-cli-post';
+    
+    const likes = postData.likeCount || "0";
+    const comments = postData.commentCount || "0";
+    
     postDiv.innerHTML = `
-        <div class="fb-cli-text"><span class="prompt">C:\\Users\\${escapeHtml(postData.author)}&gt;</span> ${escapeHtml(postData.body)}</div>
-        <div class="fb-cli-load-comments" data-id="${uniqueId}">[ load comments ${postData.commentCount ? `(${postData.commentCount})` : ''} ]</div>
+        <div class="fb-cli-text">
+            <span class="prompt">C:\\Users\\${escapeHtml(postData.author)}&gt;</span> 
+            <span class="fb-cli-body">${escapeHtml(postData.body)}</span> 
+            <span class="fb-cli-load-comments" data-id="${uniqueId}">[ L: ${escapeHtml(likes)} | C: ${escapeHtml(comments)} ]</span>
+        </div>
         <div class="fb-cli-comments-container"></div>
     `;
     cliOverlay.appendChild(postDiv);
@@ -208,9 +246,9 @@ function renderPost(postData, postNode, uniqueId) {
 }
 
 function updatePost(postDiv, postData) {
-    const textDiv = postDiv.querySelector('.fb-cli-text');
-    if (textDiv) {
-        textDiv.innerHTML = `<span class="prompt">C:\\Users\\${escapeHtml(postData.author)}&gt;</span> ${escapeHtml(postData.body)}`;
+    const bodySpan = postDiv.querySelector('.fb-cli-body');
+    if (bodySpan) {
+        bodySpan.innerHTML = escapeHtml(postData.body);
     }
 }
 
