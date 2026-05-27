@@ -121,6 +121,12 @@ function extractPostData(postElement) {
                        .replace(/\.\.\.\s*Xem thêm$/i, '')
                        .replace(/…?\s*See more$/i, '')
                        .replace(/\.\.\.\s*See more$/i, '')
+                       .replace(/…?\s*Ẩn bớt$/i, '')
+                       .replace(/\.\.\.\s*Ẩn bớt$/i, '')
+                       .replace(/…?\s*See less$/i, '')
+                       .replace(/\.\.\.\s*See less$/i, '')
+                       .replace(/\s*Ẩn bớt$/i, '')
+                       .replace(/\s*See less$/i, '')
                        .replace(/…$/, '')
                        .replace(/\.\.\.$/, '')
                        .trim();
