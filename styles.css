@@ -87,3 +87,14 @@ body *:not(#fb-cli-overlay):not(#fb-cli-overlay *) {
     color: #ffffff;
     font-weight: bold;
 }
+
+.fb-cli-link {
+    color: #3897f0; /* Terminal blue link */
+    text-decoration: underline;
+    cursor: pointer;
+    pointer-events: auto !important; /* Make sure links are clickable */
+}
+
+.fb-cli-link:hover {
+    color: #63b3ff;
+}

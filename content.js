@@ -252,7 +252,7 @@ function renderPost(postData, postNode, uniqueId) {
     const likes = postData.likeCount || "0";
     const comments = postData.commentCount || "0";
     
-    postDiv.innerHTML = `<div class="fb-cli-text"><span class="prompt">C:\\Users\\${escapeHtml(postData.author)}&gt;</span> <span class="fb-cli-body">${escapeHtml(postData.body)}</span> <span class="fb-cli-load-comments" data-id="${uniqueId}">[ L: ${escapeHtml(likes)} | C: ${escapeHtml(comments)} ]</span></div><div class="fb-cli-comments-container"></div>`;
+    postDiv.innerHTML = `<div class="fb-cli-text"><span class="prompt">C:\\Users\\${escapeHtml(postData.author)}&gt;</span> <span class="fb-cli-body">${linkify(escapeHtml(postData.body))}</span> <span class="fb-cli-load-comments" data-id="${uniqueId}">[ L: ${escapeHtml(likes)} | C: ${escapeHtml(comments)} ]</span></div><div class="fb-cli-comments-container"></div>`;
     cliOverlay.appendChild(postDiv);
     
     // Add event listener for the load comments button
@@ -269,7 +269,7 @@ function renderPost(postData, postNode, uniqueId) {
 function updatePost(postDiv, postData) {
     const bodySpan = postDiv.querySelector('.fb-cli-body');
     if (bodySpan) {
-        bodySpan.innerHTML = escapeHtml(postData.body);
+        bodySpan.innerHTML = linkify(escapeHtml(postData.body));
     }
 }
 
@@ -281,6 +281,18 @@ function escapeHtml(unsafe) {
          .replace(/>/g, "&gt;")
          .replace(/"/g, "&quot;")
          .replace(/'/g, "&#039;");
+}
+
+function linkify(text) {
+    if (!text) return "";
+    const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|]|\bwww\.[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    return text.replace(urlRegex, (url) => {
+        let hyper = url;
+        if (!hyper.match(/^[a-zA-Z]+:\/\//)) {
+            hyper = 'http://' + hyper;
+        }
+        return `<a href="${hyper}" target="_blank" class="fb-cli-link">${url}</a>`;
+    });
 }
 
 // Handle an individual post node
