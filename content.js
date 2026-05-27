@@ -1,5 +1,10 @@
 // content.js
 
+// Instantly apply black overlay styling to html at document_start to prevent white flashes
+if (!window.location.href.includes('/messages/')) {
+    document.documentElement.classList.add('fb-cli-active');
+}
+
 let cliOverlay = null;
 const processedPosts = new Map();
 const printQueue = [];
