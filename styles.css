@@ -1,11 +1,11 @@
 /* Instead of covering the page with an overlay (which breaks Facebook's visibility checks),
    we make Facebook's own elements nearly invisible to the eye but still geometrically present. */
 
-html.fb-cli-active {
+html:not(.fb-cli-disabled) {
     background-color: #000 !important;
 }
 
-body.fb-cli-active {
+body:not(.fb-cli-disabled) {
     /* 1% opacity is functionally invisible against a black background, 
        but Facebook's IntersectionObserver still considers it "rendered" so infinite scroll works! */
     opacity: 0.01 !important;

@@ -1,8 +1,8 @@
 // content.js
 
-// Instantly apply black overlay styling to html at document_start to prevent white flashes
-if (!window.location.href.includes('/messages/')) {
-    document.documentElement.classList.add('fb-cli-active');
+// Instantly disable black overlay styling on Messenger at document_start to prevent black flashes
+if (window.location.href.includes('/messages/')) {
+    document.documentElement.classList.add('fb-cli-disabled');
 }
 
 let cliOverlay = null;
@@ -560,16 +560,16 @@ function checkUrlAndToggleCLI() {
     
     if (isMessagesPage) {
         if (overlay) overlay.style.display = 'none';
-        document.documentElement.classList.remove('fb-cli-active');
-        document.body.classList.remove('fb-cli-active');
+        document.documentElement.classList.add('fb-cli-disabled');
+        document.body.classList.add('fb-cli-disabled');
         document.body.style.opacity = '1';
         document.body.style.pointerEvents = 'auto';
     } else {
         initOverlay(); // Enforce overlay existence
         const visibleOverlay = document.getElementById('fb-cli-overlay');
         if (visibleOverlay) visibleOverlay.style.display = 'block';
-        document.documentElement.classList.add('fb-cli-active');
-        document.body.classList.add('fb-cli-active');
+        document.documentElement.classList.remove('fb-cli-disabled');
+        document.body.classList.remove('fb-cli-disabled');
         document.body.style.opacity = '';
         document.body.style.pointerEvents = '';
     }
