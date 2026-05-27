@@ -190,8 +190,7 @@ function renderPost(postData, postNode, uniqueId) {
     const postDiv = document.createElement('div');
     postDiv.className = 'fb-cli-post';
     postDiv.innerHTML = `
-        <div class="fb-cli-header"><span class="prompt">C:\\Users\\${escapeHtml(postData.author)}&gt;</span> </div>
-        <div class="fb-cli-text">${escapeHtml(postData.body)}</div>
+        <div class="fb-cli-text"><span class="prompt">C:\\Users\\${escapeHtml(postData.author)}&gt;</span> ${escapeHtml(postData.body)}</div>
         <div class="fb-cli-load-comments" data-id="${uniqueId}">[ load comments ${postData.commentCount ? `(${postData.commentCount})` : ''} ]</div>
         <div class="fb-cli-comments-container"></div>
     `;
@@ -211,7 +210,7 @@ function renderPost(postData, postNode, uniqueId) {
 function updatePost(postDiv, postData) {
     const textDiv = postDiv.querySelector('.fb-cli-text');
     if (textDiv) {
-        textDiv.innerHTML = escapeHtml(postData.body);
+        textDiv.innerHTML = `<span class="prompt">C:\\Users\\${escapeHtml(postData.author)}&gt;</span> ${escapeHtml(postData.body)}`;
     }
 }
 
