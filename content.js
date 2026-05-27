@@ -179,13 +179,25 @@ function extractPostData(postElement) {
         }
     }
 
-    // Extract reaction/like count
+    // Extract reaction/like count using robust double-ended regex matching
     let likeCount = "0";
     for (let el of allDescendants) {
         let ariaLabel = el.getAttribute('aria-label');
+        let text = cleanObfuscatedText(el.textContent);
+        
         if (ariaLabel) {
             let cleanAria = cleanObfuscatedText(ariaLabel);
-            let match = cleanAria.match(/(\d+[\dKkMm,.]*)\s*(?:others|người khác|reactions?|cảm xúc|thích|likes?)/i);
+            let match = cleanAria.match(/(?:others|người khác|reactions?|cảm xúc|thích|likes?)\s*:?\s*(\d+[\dKkMm,.]*)/i) ||
+                        cleanAria.match(/(\d+[\dKkMm,.]*)\s*(?:others|người khác|reactions?|cảm xúc|thích|likes?)/i);
+            if (match) {
+                likeCount = match[1];
+                break;
+            }
+        }
+        
+        if (text && text.length < 50) {
+            let match = text.match(/(?:others|người khác|reactions?|cảm xúc|thích|likes?)\s*:?\s*(\d+[\dKkMm,.]*)/i) ||
+                        text.match(/(\d+[\dKkMm,.]*)\s*(?:others|người khác|reactions?|cảm xúc|thích|likes?)/i);
             if (match) {
                 likeCount = match[1];
                 break;
@@ -193,14 +205,15 @@ function extractPostData(postElement) {
         }
     }
     
+    // Fallback strategy: find simple numbers in the lower section near reaction icons
     if (likeCount === "0") {
-        const icons = postElement.querySelectorAll('[role="img"]');
+        const icons = postElement.querySelectorAll('[role="img"], [class*="like" i], [class*="react" i]');
         for (let icon of icons) {
             let parent = icon.parentElement;
             for (let i = 0; i < 4 && parent; i++) {
                 let pText = cleanObfuscatedText(parent.textContent);
                 let match = pText.match(/^(\d+[\dKkMm,.]*)$/);
-                if (match) {
+                if (match && match[1] !== commentCount) {
                     likeCount = match[1];
                     break;
                 }
