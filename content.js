@@ -224,14 +224,7 @@ function renderPost(postData, postNode, uniqueId) {
     const likes = postData.likeCount || "0";
     const comments = postData.commentCount || "0";
     
-    postDiv.innerHTML = `
-        <div class="fb-cli-text">
-            <span class="prompt">C:\\Users\\${escapeHtml(postData.author)}&gt;</span> 
-            <span class="fb-cli-body">${escapeHtml(postData.body)}</span> 
-            <span class="fb-cli-load-comments" data-id="${uniqueId}">[ L: ${escapeHtml(likes)} | C: ${escapeHtml(comments)} ]</span>
-        </div>
-        <div class="fb-cli-comments-container"></div>
-    `;
+    postDiv.innerHTML = `<div class="fb-cli-text"><span class="prompt">C:\\Users\\${escapeHtml(postData.author)}&gt;</span> <span class="fb-cli-body">${escapeHtml(postData.body)}</span> <span class="fb-cli-load-comments" data-id="${uniqueId}">[ L: ${escapeHtml(likes)} | C: ${escapeHtml(comments)} ]</span></div><div class="fb-cli-comments-container"></div>`;
     cliOverlay.appendChild(postDiv);
     
     // Add event listener for the load comments button
