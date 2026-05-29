@@ -547,6 +547,7 @@ function triggerLoadComments(postNode, postDiv) {
     window.currentActiveLoadBtn = loadBtn;
     const originalUrl = window.location.href;
     
+    const originalText = loadBtn ? loadBtn.textContent : '';
     if (loadBtn) loadBtn.textContent = '[ loading... ]';
     
     // Click the native comment button
@@ -567,8 +568,9 @@ function triggerLoadComments(postNode, postDiv) {
             setTimeout(() => {
                 closeCommentOverlay(originalUrl);
             }, 2500);
-        } else if (watcherAttempts > 40) { // Timeout after 8 seconds (e.g. if comments loaded inline without URL change)
+        } else if (watcherAttempts > 75) { // Timeout after 15 seconds (e.g. if comments loaded inline without URL change)
             clearInterval(watcher);
+            if (loadBtn) loadBtn.textContent = originalText;
         }
     }, 200);
 }
