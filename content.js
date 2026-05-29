@@ -524,11 +524,18 @@ function closeCommentOverlay(originalUrl) {
     let checkAttempts = 0;
     const urlChecker = setInterval(() => {
         checkAttempts++;
-        if (window.location.href === originalUrl) {
-            clearInterval(urlChecker); // Successfully went back natively! Clear immediately.
+        const currentPath = window.location.pathname;
+        const isBaseFacebook = currentPath === '/' || currentPath === '/home.php';
+        
+        if (window.location.href === originalUrl || isBaseFacebook) {
+            clearInterval(urlChecker); // Successfully went back natively or already on homepage! Clear immediately.
         } else if (checkAttempts >= 10) { // Failed natively after 2 seconds
             clearInterval(urlChecker);
-            window.history.back(); // Fire browser-history back only as final fallback
+            const finalPath = window.location.pathname;
+            const finalIsBaseFacebook = finalPath === '/' || finalPath === '/home.php';
+            if (!finalIsBaseFacebook) {
+                window.history.back(); // Fire browser-history back only as final fallback
+            }
         }
     }, 200);
 }
